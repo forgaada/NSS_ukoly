@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokladní systém pro restaurace</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Bookman Old Style", "S", serif;
+            background-color: #f0faf7;
+        }
+
+        .page {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .page header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100px;
+            background: #7b5dff;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        .page section {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            flex-grow: 1;
+            min-height: 400px;
+        }
+
+        /** NAVIGATION SECTION **/
+
+        .page section nav {
+            display: none;
+            flex-direction: column;
+            padding: 0.5em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        #menu ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        #menu ul li {
+            list-style: none;
+        }
+
+        #menu ul li a {
+            width: auto;
+            text-decoration: none;
+            color: white;
+            display: block;
+            align-content: center;
+            text-align: center;
+            padding: 20px 30px;
+            margin: 5px;
+            background-color: #9780ff;
+            transition: all 0.5s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        #menu ul li a:visited { text-decoration: none;}
+        #menu ul li a:hover { text-decoration: none;}
+        #menu ul li a:focus { text-decoration: none;}
+
+        #menu ul li a:hover {
+            background: #7b5dff;
+            transform: translateX(+5%);
+        }
+
+        #menu-control-input {
+            display: none;
+        }
+        #menu-control {
+            display: none;
+        }
+
+        .page section nav .user-box {
+            display: flex;
+            width: 165px;
+            margin: 5px;
+            justify-content: center;
+            align-content: start;
+            flex-direction: column;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            background-color: #e6f0ed;
+        }
+
+        .page section nav .user-box img{
+            align-self: center;
+        }
+
+        .page section nav .user-box h4{
+            margin-top: 0;
+            background-color: #7b5dff;
+            padding-top: 1em;
+            height: 40px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .page section nav .user-box p{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 75ch;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            background-color: white;
+        }
+
+        /** MAIN SECTION **/
+
+        .page section article {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-grow: 1;
+            flex-direction: column;
+            padding: 1em;
+        }
+
+        .page section article .content-box {
+            align-self: center;
+            flex-wrap: nowrap;
+            width: 400px;
+            display: flex;
+            justify-content: center;
+            align-content: start;
+            flex-direction: column;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            background-color: #e6f0ed;
+            margin-top: 10px;
+            margin-bottom: 50px;
+        }
+
+        .page section article .content-box h4{
+            margin-top: 0;
+            background-color: #7b5dff;
+            padding-top: 1em;
+            height: 40px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .page section article .content-box p{
+            display: flex;
+            justify-content: flex-start;
+            flex-direction: column;
+        }
+
+        .page section article .content-box label{
+            margin: 5px;
+        }
+
+        .page section article .content-box p input {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            margin: 5px;
+            height: 25px;
+            width: 75%;
+        }
+
+        .page section article .content-box .content-button {
+            align-self: center;
+            height: 50px;
+            width: 75px;
+            color: white;
+            background-color: #9780ff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            transition: background-color 0.5s;
+            border: 0;
+            font-family: "Bookman Old Style", "S", serif;
+            font-size: 14px;
+            margin: 1em;
+            border-radius: 2px;
+        }
+
+        .page section article .content-box .content-button:hover {
+            background-color: #7b5dff;
+        }
+
+        .page section article .label-content {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            background-color: white;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .page section article .content-box .content-scrollable {
+            max-height: 300px;
+            overflow: auto;
+            text-align:justify;
+        }
+
+        .page section article .content_inline {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .page section article .login-boxes {
+            display: none;
+        }
+
+        .page section article #tables {
+            display: none;
+            align-self: center;
+            margin: 5px;
+            fill: darkseagreen;
+        }
+
+        .page section article #tables .background {
+              height: 400px;
+              width: 800px;
+          }
+
+        .page section article #tables .table {
+            height: 75px;
+            width: 75px;
+            transition: all 0.25s ease-out;
+        }
+
+        .page section article #tables .text-content {
+            width: 30px;
+        }
+
+        .page section article #tables .table:hover{
+            fill: red;
+        }
+
+        /** FOOTER **/
+
+        .page footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            background: #7b5dff;
+            color: white;
+        }
+
+        /** ERROR **/
+        .error {
+            border-color: #ff0000;
+            border-width: 3px;
+        }
+
+        /** MOBILE / TABLET SECTION **/
+
+        @media only screen and (max-width: 768px) {
+            .page section {
+                flex-direction: column;
+            }
+
+            .page section article .content-box {
+                flex-grow: 1;
+                width: 100%;
+            }
+
+            .page section article .content-box p input  {
+                width: auto;
+            }
+
+            #tables {
+                align-self: center;
+                height: 400px;
+                width: 400px;
+            }
+
+            .page section article #tables .background {
+                height: 400px;
+                width: 400px;
+            }
+
+            .page section article #tables .table {
+                transition: all 0.25s ease-out;
+                transform: scaleX(0.5);
+            }
+
+            .page section article #tables .text-content {
+                width: 20px;
+                font-size: 20px;
+                transform: scaleX(0.5);
+            }
+
+            .page section nav {
+                order: 0;
+                padding: 0;
+            }
+
+            .page section nav .user-box {
+                display: none;
+            }
+
+            .page section main {
+                order: 1;
+            }
+
+            #menu {
+                display: inline;
+            }
+            .main_menu {
+                display: none;
+            }
+            #menu ul li a{
+                margin: 0 ;
+            }
+
+            #menu ul li a:hover {
+                transform: none;
+            }
+
+            #menu-control {
+                width: 100%;
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                visibility: visible;
+                color: white;
+                background-color: #7b5dff;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                transition: background-color 0.5s;
+            }
+
+            #menu-control:hover {
+                background-color: #9780ff;
+            }
+
+            #menu-control-input:checked + .main_menu {
+                display: inline;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <header>
+        <h1>Pokladní systém</h1>
+    </header>
+    <section>
+        <nav id="menu">
+            <label id="menu-control" for="menu-control-input">Menu</label><input type="checkbox" id="menu-control-input" />
+            <ul class="main_menu">
+                <li><a href="state">Přehled</a></li>
+                <li><a href="meals">Jídla</a></li>
+                <li><a href="settings">Nastavení</a></li>
+                <li><a href="logout">Odhlásit</a></li>
+            </ul>
+            <div class="user-box">
+                <h4>Uživatel</h4>
+                <img src="https://picsum.photos/id/237/200/300" alt="user-image" width="100" height="100">
+                <p id="user-name">Uživatel: Nepřihlášen</p>
+            </div>
+        </nav>
+        <article id= "main">
+            <h2 id="article-heading"></h2>
+            <p id="article-content"></p>
+            <svg width="800" height="400" id="tables"></svg>
+            <div class="content-box login-boxes">
+                <h4>Přihlášení uživatele</h4>
+                <p>
+                    <label for="name-input">Jméno: </label><input type="text" id="name-input" placeholder="Username">
+                    <label for="password-input">Heslo: </label><input type="password" id="password-input" placeholder="Password">
+                </p>
+                <button class="content-button" id="login-button">Přihlásit</button>
+            </div>
+        </article>
+    </section>
+    <footer>
+        CashRegisterSystem | 2020 | CTU FEL Prague
+    </footer>
+</div>
+<script>
+    const login_button = document.getElementById("login-button");
+    let loggedIn = false;
+
+    window.onload = load;
+
+    let dummyTables = [
+        {x: 20,y: 20},
+        {x: 115,y: 20},
+        {x: 210,y: 20},
+        {x:700, y:20},
+        {x:210, y:115}
+        ];
+    let svgTables;
+
+    function load() {
+        loadLoginPage();
+    }
+
+    function loadLoginPage() {
+        clearContentBoxes();
+        loadContentBoxes("login-boxes");
+        updateArticle("", "");
+    }
+
+    function loadStatePage() {
+        drawTables();
+        clearContentBoxes();
+        loadContentBoxes("state-boxes");
+        updateArticle("Přehled stavu restaurace",
+            "Zde vidíš přehled stolů v restauraci. Detail zjistíš označením. Stůl přidáš pomocí 'Ctrl' + kliknutí. " +
+            "Odebereš jej pomocí 'Shift' + kliknutí.");
+    }
+
+    function loadMealsPage() {
+        clearContentBoxes();
+        loadContentBoxes("meals-boxes");
+        updateArticle("Přehled jídel",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim est magna, sed consequat purus molestie quis.");
+    }
+
+    function loadSettingsPage() {
+        clearContentBoxes();
+        loadContentBoxes("settings-boxes");
+        updateArticle("Nastavení profilu uživatele",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim est magna, sed consequat purus molestie quis.");
+    }
+
+    function logIn() {
+        loggedIn = true;
+        document.getElementById("menu").style.display = "flex";
+        loadStatePage();
+    }
+
+    function logOut() {
+        loggedIn = false;
+        document.getElementById("menu").style.display = "none";
+        loadLoginPage();
+    }
+
+    function drawTables() {
+        document.getElementById("tables").style.display = "flex";
+        if (svgTables != null) {
+            return
+        } else {
+            document.getElementById("tables").style.display = "flex";
+            svgTables = new SVGTables("#tables");
+            document.getElementById("tables").addEventListener("click",
+                function (e) {
+                    if (e.ctrlKey) {
+                        svgTables.drawTable(e.offsetX, e.offsetY,1);
+                    }
+                });
+            for (let table of dummyTables) {
+                svgTables.drawTable(table.x,table.y);
+            }
+        }
+    }
+
+    function hideTables() {
+        document.getElementById("tables").style.display = "none";
+    }
+
+    class SVGTables {
+        constructor(svgElementId) {
+            this._svg = document.querySelector(svgElementId);
+            this._svgNs = "http://www.w3.org/2000/svg";
+            this._tableCounter = 1;
+            this.clear();
+            let rectElement = document.createElementNS(this._svgNs, "rect");
+            rectElement.setAttributeNS(null,"x","0");
+            rectElement.setAttributeNS(null,"y","0");
+            rectElement.setAttributeNS(null,"fill","lightblue");
+            rectElement.classList.add("background");
+            rectElement.setAttributeNS(null,"rx","10");
+            rectElement.setAttributeNS(null,"ry","10");
+            rectElement.setAttributeNS(null,"stroke","black");
+            rectElement.setAttributeNS(null,"stroke-width","5");
+            rectElement.setAttributeNS(null,"opacity","0.5");
+            this._svg.appendChild(rectElement);
+        }
+
+        clear () {
+            this._svg.innerHTML = "";
+        }
+
+        drawTable(x,y) {
+            let rectElement = document.createElementNS(this._svgNs, "rect");
+            rectElement.setAttributeNS(null,"x",x);
+            rectElement.setAttributeNS(null,"y",y);
+            rectElement.setAttributeNS(null,"fill","blue");
+            rectElement.setAttributeNS(null,"rx","10");
+            rectElement.setAttributeNS(null,"ry","10");
+            rectElement.setAttributeNS(null,"stroke","black");
+            rectElement.setAttributeNS(null,"stroke-width","5");
+            rectElement.setAttributeNS(null,"opacity","0.5");
+            rectElement.classList.add("table");
+            this._svg.appendChild(rectElement);
+
+            let textElement = document.createElementNS(this._svgNs, "text");
+            textElement.setAttributeNS(null,"x",x+15);
+            textElement.setAttributeNS(null,"y",y+45);
+            textElement.setAttributeNS(null,"fill","white");
+            textElement.setAttributeNS(null,"height","40");
+            textElement.textContent = "Stůl "+this._tableCounter++;
+            textElement.classList.add("text-content");
+            this._svg.appendChild(textElement);
+
+            rectElement.addEventListener("click",function (e) {
+                if (e.shiftKey) {
+                    rectElement.parentNode.removeChild(rectElement);
+                    textElement.parentNode.removeChild(textElement);
+                    return;
+                }
+                    let element = document.createElement("div");
+                    element.classList.add("content-box");
+                    let header = document.createElement("h4");
+                    header.innerText = textElement.textContent;
+                    let text = document.createElement("p");
+                    text.innerText = "Zde sedí doktor Dlaha a jeho rodina.";
+                    let button = document.createElement("button");
+                    button.classList.add("content-button");
+                    button.innerText = "Zavřít";
+                    button.addEventListener("click", function () {
+                        document.getElementById("main").removeChild(element);
+                        rectElement.setAttributeNS(null,"fill","blue");
+                    });
+                    element.appendChild(header);
+                    element.appendChild(text);
+                    element.appendChild(button);
+                    document.getElementById("main").appendChild(element);
+
+                // element.style.position = "absolute";
+                // element.style.alignSelf = "center";
+                // element.style.justifySelf = "center";
+            });
+        }
+
+    }
+
+    for (let element of document.getElementsByTagName("a")){
+        element.addEventListener("click", function(e) {
+            e.preventDefault();
+            document.getElementById("menu-control-input").checked = false;
+            if(e.target && e.target.nodeName === "A" && loggedIn) {
+                hideTables();
+                switch (e.target.innerText) {
+                    case "Přehled": {
+                        loadStatePage();
+                        break;
+                    }
+                    case "Jídla": {
+                        loadMealsPage();
+                        break;
+                    }
+                    case "Nastavení": {
+                        loadSettingsPage();
+                        break;
+                    }
+                    case "Odhlásit": {
+                        logOut();
+                        break;
+                    }
+                    default :
+                }
+            }
+        });
+    }
+
+    function clearContentBoxes() {
+        for (let element of document.getElementsByClassName("content-box")) {
+            element.style.display = "none";
+        }
+    }
+
+    function loadContentBoxes(className) {
+        for (let element of document.getElementsByClassName(className)) {
+            element.style.display = "flex";
+        }
+    }
+
+    function updateArticle(heading, content) {
+        document.getElementById("article-heading").innerText = heading;
+        document.getElementById("article-content").innerText = content;
+    }
+
+    login_button.addEventListener("click", function (e) {
+        let textElementsToValidate = ["name-input","password-input"];
+        if (!validate([],textElementsToValidate)) {
+            return
+        } else {
+            logIn();
+        }
+        document.getElementById("name-input").value = "";
+        document.getElementById("password-input").value = "";
+
+    });
+
+
+    // INPUT VALIDATION SECTION
+
+    function validateNumberInput(inputElementId) {
+        let element = document.getElementById(inputElementId);
+        if (element.value < 0 || element.value==="" || isNaN(element.value)) {
+            element.classList.add("error");
+            return false;
+        } else if (element.classList.contains("error")) {
+            element.classList.remove("error");
+            return true;
+        }
+        return true;
+    }
+
+    function validateTextInput(inputElementId) {
+        let element = document.getElementById(inputElementId);
+        if (element.value === "" || element.value.length>150) {
+            element.classList.add("error");
+            return false;
+        } else if (element.classList.contains("error")) {
+            element.classList.remove("error");
+            return true;
+        }
+        return true;
+    }
+
+    function validate(numberInputs, textInputs) {
+        let success = true;
+        for (let id of numberInputs) {
+            if (!validateNumberInput(id)) {
+                success = false;
+            }
+        }
+        for (let tid of textInputs) {
+            if (!validateTextInput(tid)) {
+                success = false;
+            }
+        }
+        return success;
+    }
+
+</script>
+</body>
+</html>
